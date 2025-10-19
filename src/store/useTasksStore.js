@@ -11,16 +11,25 @@ export const useTasksStore = create((set, get) => ({
     set({ tasks: data, loading: false });
   },
 
-  addTask: async (text) => {
+  addTask: async (text, listId = 'general') => {
     set({ loading: true });
-    const newTask = await tasksApi.create(text);
+    const newTask = await tasksApi.create(text, listId);
     set({ tasks: [...get().tasks, newTask] });
     set({ loading: false });
   },
 
-  editTask: async (id, text, completed) => {
+  toggleTask: async (id, completed) => {
     set({ loading: true });
-    const updated = await tasksApi.update(id, text, completed);
+    const updated = await tasksApi.toggle(id, !completed);
+    set({
+      tasks: get().tasks.map((t) => (t.id === id ? updated : t)),
+    });
+    set({ loading: false });
+  },
+
+  editTask: async (id, text) => {
+    set({ loading: true });
+    const updated = await tasksApi.update(id, text);
     set({
       tasks: get().tasks.map((t) => (t.id === id ? updated : t)),
     });
