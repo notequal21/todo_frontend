@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { isJwtValid } from '@/lib/jwt';
 
 // Простой список задач: добавление, удаление, отметка выполнения и редактирование
-export default function Home() {
+export default function BoardPage() {
   const router = useRouter();
   const { tasks, loading, fetchTasks, addTask, editTask, deleteTask } =
     useTasksStore();
@@ -60,36 +60,40 @@ export default function Home() {
   };
 
   useEffect(() => {
+    fetchLists();
+  }, [fetchLists]);
+
+  useEffect(() => {
     const token = localStorage.getItem('token');
     if (!isJwtValid(token)) {
       localStorage.removeItem('token');
       router.replace('/auth');
       return;
     }
+    // Если токен валиден — можно грузить данные
     fetchLists();
   }, [router, fetchLists]);
 
   return (
-    <>main page</>
-    // <main className='min-h-dvh bg-gradient-to-b from-white to-neutral-50'>
-    //   <div className='px-4 py-10'>
-    //     <div className='flex items-center justify-between'>
-    //       <h1 className='mb-6 text-3xl font-semibold tracking-tight'>Задачи</h1>
+    <main className='min-h-dvh bg-gradient-to-b from-white to-neutral-50'>
+      <div className='px-4 py-10'>
+        <div className='flex items-center justify-between'>
+          <h1 className='mb-6 text-3xl font-semibold tracking-tight'>Списки</h1>
 
-    //       {/* <Button variant='default' onClick={() => addList('Новый список')}>
-    //         <Plus className='h-4 w-4' />
-    //         Добавить список
-    //       </Button> */}
-    //       <DialogNewList />
-    //     </div>
+          {/* <Button variant='default' onClick={() => addList('Новый список')}>
+            <Plus className='h-4 w-4' />
+            Добавить список
+          </Button> */}
+          <DialogNewList />
+        </div>
 
-    //     <div className='flex flex-wrap gap-4'>
-    //       <ListCard title='Общий список' />
-    //       {lists.map((list) => (
-    //         <ListCard key={list.id} list={list} />
-    //       ))}
-    //     </div>
-    //   </div>
-    // </main>
+        <div className='flex flex-wrap gap-4'>
+          <ListCard title='Общий список' />
+          {lists.map((list) => (
+            <ListCard key={list.id} list={list} />
+          ))}
+        </div>
+      </div>
+    </main>
   );
 }

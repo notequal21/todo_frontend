@@ -11,9 +11,9 @@ export const useListsStore = create((set, get) => ({
     set({ lists: data, loadingLists: false });
   },
 
-  addList: async (text) => {
+  addList: async (text, boardId) => {
     set({ loadingLists: true });
-    const newList = await listsApi.create(text);
+    const newList = await listsApi.create(text, boardId);
     set({ lists: [...get().lists, newList] });
     set({ loadingLists: false });
   },

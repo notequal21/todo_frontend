@@ -13,7 +13,7 @@ import { useListsStore } from '@/store/useListsStore';
 import { Input } from '../ui/input';
 import { useState } from 'react';
 
-const DialogNewList = () => {
+const DialogNewList = ({ boardId }) => {
   const { addList } = useListsStore();
   const [title, setTitle] = useState('');
 
@@ -43,7 +43,7 @@ const DialogNewList = () => {
             <Button
               variant='default'
               onClick={() => {
-                addList(title);
+                addList(title, boardId);
                 setTitle('');
               }}
               disabled={!title.trim()}
